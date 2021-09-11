@@ -32,8 +32,8 @@ local RELEASE_TRACK = 'release_track_index';
 local PRESS_TRACK = 'press_track_index';
 local TEST_HIT = 'get_delta_time_from_hit_time';
 local TEST_RELEASE = 'get_delta_time_from_release_time';
-local visit_webnpc = nil
-local WebNPCManager = nil
+visit_webnpc = nil
+WebNPCManager = nil
 
 local function GetHitPercentage(a) 
     return HitPercentages[a] 
@@ -137,6 +137,7 @@ Utilities = {
     get_func = function(parent, func)
         for i,v in next, parent do
             local consts = type(v) == 'function' and getconstants(v) or {}
+
             if (type(v) == 'function' and Utilities.determine(func, consts)) then
                 return v
             end
@@ -144,9 +145,9 @@ Utilities = {
     end;
 };
 
-local Database
-local AllSongs;
-local Applying = {}
+Database = nil
+AllSongs = nil
+Applying = {}
 local StoredSongs = {}
 
 local function Apply(as,db)
@@ -196,22 +197,23 @@ local function Apply(as,db)
     end
 end
 
-local colors = {
+colors = {
     [1] = Color3.fromRGB(255, 0, 0);
     [2] = Color3.fromRGB(255, 0, 0);
     [3] = Color3.fromRGB(255, 0, 0);
     [4] = Color3.fromRGB(255, 0, 0);
 }
 
-local TrackSystem
-local get_local_elements_folder
-local vip
-local WebNPCManager
-local SPRemoteEvent 
-local GameUtilities
-local MenuManager
-local Client
-local SongSpeedValue = 1000
+TrackSystem = nil
+get_local_elements_folder = nil
+vip = nil
+WebNPCManager = nil
+SPRemoteEvent = nil
+GameUtilities = nil
+MenuManager = nil
+Client = nil
+
+SongSpeedValue = 1000
 
 local SongVolume = 1
 
@@ -231,7 +233,7 @@ end)
 
 local SongId = Utils:Label("Song ID : ")
 
-for i,v in next, getgc(true) do
+loadstring([[for i,v in next, getgc(true) do
     if type(v) == 'table' then
         if rawget(v, 'key_has_combineinfo') then
             Database = v;
@@ -316,7 +318,7 @@ for i,v in next, getgc(true) do
             get_local_elements_folder = v.get_local_elements_folder 
         end
     end
-end
+end]])()
 
 for _,AllSongs in next, Applying do
     Apply(AllSongs, Database)
@@ -404,16 +406,30 @@ local function update_autoplayer(_game, target_delay)
     for Index = 1, Notes:count() do
         local Note = Notes:get(Index)
         if Note then
+            local TEST_RELEASE_FUNC, TEST_HIT_FUNC = nil, nil
             local NoteTrack = Note:get_track_index(Index)
-            if ( HeldNotes[NoteTrack] and Utilities.get_func(Note, TEST_RELEASE) ) then
-                local released, result, delay = Utilities.get_func(Note, TEST_RELEASE)(Note, _game, 0)
+			
+			for i,v in next, Note do 
+				if type(v) == "function" then 
+					for k,x in next, getconstants(v) do 
+					    if x == "get_delta_time_from_release_time" then 
+					        TEST_RELEASE_FUNC = v
+					    elseif x == "get_delta_time_from_hit_time" then
+					        TEST_HIT_FUNC = v
+					    end 
+					end
+				end 
+			end
+
+            if ( HeldNotes[NoteTrack] and TEST_RELEASE_FUNC ) then
+                local released, result, delay = TEST_RELEASE_FUNC(Note, _game, 0)
                 if (released and delay >= Target) then
                     HeldNotes[NoteTrack] = nil
                     Utilities.get_func(trackSystem, RELEASE_TRACK)(trackSystem, _game, NoteTrack)
                     return true
                 end
-            elseif (library.flags["Autoplayer"] and Utilities.get_func(Note, TEST_HIT)) then
-                local hit, result, delay = Utilities.get_func(Note, TEST_HIT)(Note, _game, 0)
+            elseif (library.flags["Autoplayer"] and TEST_HIT_FUNC) then
+                local hit, result, delay = TEST_HIT_FUNC(Note, _game, 0)
                 if hit and delay >= Target then
                     Utilities.get_func(trackSystem, PRESS_TRACK)(trackSystem, _game, NoteTrack)
                     _game:debug_any_press()
