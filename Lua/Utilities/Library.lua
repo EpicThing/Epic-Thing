@@ -2033,3 +2033,5 @@ function library:Window(TitleWhite)
 	end
 	return window
 end
+
+return library
