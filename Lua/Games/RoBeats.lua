@@ -4,7 +4,7 @@ end
 
 LoadFromRepo("Utilities", "Init")
 
-local library = LoadFromRepo("Utilities", "Library")
+library = LoadFromRepo("Utilities", "Library")
 
 local Window = library:Window("RoBeats")
 
@@ -238,7 +238,6 @@ loadstring([[for i,v in next, getgc(true) do
         if rawget(v, 'key_has_combineinfo') then
             Database = v;
         end
-
         if rawget(v, "input_began") then 
             local input_began = v.input_began
             v.input_began = function(_, input) 
@@ -248,15 +247,12 @@ loadstring([[for i,v in next, getgc(true) do
                 return input_began(_, input)
             end
         end
-
         if rawget(v, "visit_webnpc") then
             visit_webnpc = v.visit_webnpc
         end 
-
         if rawget(v, "webnpcid_should_trigger_reward") then
             WebNPCManager = v
         end
-
         if rawget(v, "EVT_WebNPC_ServerAcknowledgeClientVisitNPC") then
             SPRemoteEvent = v
         end
@@ -268,15 +264,12 @@ loadstring([[for i,v in next, getgc(true) do
         if rawget(v, "visit_webnpc") then
             MenuManager = v
         end
-
         if rawget(v, "_player_blob_manager") and typeof(v._player_blob_manager) == "table" then
             Client = v
         end
-
         if rawget(v, 'playerblob_has_vip_for_current_day') then
             vip = v
         end
-
         if type(rawget(v, 'new')) == 'function' and islclosure(v.new) then
             local new = v.new
             local finding = {"get_default_base_color_list", "get_default_fever_color_list"};
@@ -293,7 +286,6 @@ loadstring([[for i,v in next, getgc(true) do
                 TrackSystem = v;
             end
         end	
-
         if rawget(v, "TimescaleToDeltaTime") then 
             local OldTTDT = v.TimescaleToDeltaTime
             v.TimescaleToDeltaTime = function(...)
@@ -302,7 +294,6 @@ loadstring([[for i,v in next, getgc(true) do
                 return OldTTDT(unpack(args))
             end
         end
-
         if rawget(v, 'color3_for_slot') then 
             local old = v.color3_for_slot
             v.color3_for_slot = function(self, ...)
@@ -313,7 +304,6 @@ loadstring([[for i,v in next, getgc(true) do
                 return colors[self:get_track_index()] or orig
             end
         end
-
         if rawget(v, 'get_local_elements_folder') then 
             get_local_elements_folder = v.get_local_elements_folder 
         end
