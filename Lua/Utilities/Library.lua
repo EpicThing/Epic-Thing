@@ -91,7 +91,7 @@ function library:Window(TitleWhite)
 	TabsHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	TabsHolder.BackgroundTransparency = 1.000
 	TabsHolder.Position = UDim2.new(0, 0, 0.25, 0)
-	TabsHolder.Size = UDim2.new(0, 125, 0, 307)
+	TabsHolder.Size = UDim2.new(0, 125, 0, 300)
 	TabsHolder.Image = "rbxassetid://3570695787"
 	TabsHolder.ImageColor3 = Color3.fromRGB(24, 24, 24)
 	TabsHolder.ScaleType = Enum.ScaleType.Slice
@@ -119,7 +119,7 @@ function library:Window(TitleWhite)
 	BloxburgHubTitle.Parent = MainUIFrame
 	BloxburgHubTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	BloxburgHubTitle.BackgroundTransparency = 1.000
-	BloxburgHubTitle.Position = UDim2.new(0.05, 0, 0.16, 0)
+	BloxburgHubTitle.Position = UDim2.new(0.038, 0, 0.16, 0)
 	BloxburgHubTitle.Size = UDim2.new(0, 372, 0, 35)
 	BloxburgHubTitle.Font = Enum.Font.GothamBold
 	BloxburgHubTitle.Text = "Under Ware"
