@@ -122,7 +122,7 @@ function library:Window(TitleWhite)
 	BloxburgHubTitle.Position = UDim2.new(0.05, 0, 0.16, 0)
 	BloxburgHubTitle.Size = UDim2.new(0, 372, 0, 35)
 	BloxburgHubTitle.Font = Enum.Font.GothamBold
-	BloxburgHubTitle.Text = "Epic Thing"
+	BloxburgHubTitle.Text = "Under Ware"
 	BloxburgHubTitle.TextColor3 = Color3.fromRGB(84, 116, 224)
 	BloxburgHubTitle.TextSize = 15.000
 	BloxburgHubTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -1102,7 +1102,7 @@ function library:Window(TitleWhite)
 				end
 				return picker
 			end
-			function section:Toggle(name, default, callback)
+			function section:Toggle(name, default, callback, dontsave)
 				local setting = GetSetting(name) 
 				setting = setting == "true" and true or false
 				default = setting or default 
@@ -1154,7 +1154,9 @@ function library:Window(TitleWhite)
 				local OldCallback = callback or function() end
 				callback = function(Value)
 					library.flags[name] = Value
-					AddSetting(name, tostring(Value))
+					if dontsave ~= true then
+					    AddSetting(name, tostring(Value))
+					end
                     return OldCallback(Value)
 				end
 
