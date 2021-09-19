@@ -11,7 +11,18 @@ local CurrentCamera = workspace.CurrentCamera
 local CIELUV = LoadFromRepo("Utilities", "CIELUV")
 local HealthbarLerp = CIELUV:Lerp(Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0))
 
-local Visuals = {Players = {}, Flags = {}}
+local Visuals = {Players = {}, Flags = {
+    ["Ally Color"] = Color3.new(0, 255, 0),
+    ["Enemy Color"] = Color3.new(255, 0, 0),
+    ["Use Team Color"] = false, 
+    ["Team Check"] = false, 
+    ["Info Font"] = Fonts[1],
+    ["Tracers"] = false,
+    ["Boxes"] =  false,
+    ["Healthbar"] =  false,
+    ["Info"] = false,
+    ["Extra Info"] = false
+}}
 
 local DrawingProperties = {
     Line = {
@@ -220,7 +231,7 @@ RunService.RenderStepped:Connect(function()
                 Info.Extra.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), (Box.Main.Size.Y + Box.Main.Position.Y))
             end
             
-            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Tracers"]) or false
+            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Info Font"]) or false
             Tracer.Outline.Visible = Tracer.Main.Visible
 
             Box.Main.Visible = (OnScreen and Visuals.Flags["Boxes"]) or false
