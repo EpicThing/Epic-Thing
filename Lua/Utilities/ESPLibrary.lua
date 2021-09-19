@@ -11,17 +11,23 @@ local CurrentCamera = workspace.CurrentCamera
 local CIELUV = LoadFromRepo("Utilities", "CIELUV")
 local HealthbarLerp = CIELUV:Lerp(Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0))
 
+local Fonts = {}
+
+for Font, Number in next, Drawing.Fonts do
+    table.insert(Fonts, Font)
+end
+
 local Visuals = {Players = {}, Flags = {
     ["Ally Color"] = Color3.new(0, 255, 0),
     ["Enemy Color"] = Color3.new(255, 0, 0),
     ["Use Team Color"] = false, 
-    ["Team Check"] = false, 
+    ["Team Check"] = false,
     ["Info Font"] = Fonts[1],
-    ["Tracers"] = false,
-    ["Boxes"] =  false,
-    ["Healthbar"] =  false,
-    ["Info"] = false,
-    ["Extra Info"] = false
+    ["Tracers"] = true,
+    ["Boxes"] = true,
+    ["Healthbar"] = true,
+    ["Info"] = true,
+    ["Extra Info"] = true
 }}
 
 local DrawingProperties = {
@@ -156,12 +162,6 @@ function PlayerUtilities:GetBodyParts(Player)
     end
 end
 
-local Fonts = {}
-
-for Font, Number in next, Drawing.Fonts do
-    table.insert(Fonts, Font)
-end
-
 Players.PlayerAdded:Connect(Visuals.AddPlayer)
 Players.PlayerRemoving:Connect(Visuals.RemovePlayer)
 
@@ -190,7 +190,7 @@ RunService.RenderStepped:Connect(function()
             if PlayerUtilities:IsPlayerAlive(Player) and Health and BodyParts and PlayerColor and PassedTeamCheck then
                 local HealthPercent = (Health.CurrentHealth / Health.MaxHealth)
                 local Distance = LocalPlayer:DistanceFromCharacter(BodyParts.Root.Position)
-                local ScreenPosition, OnScreen = CurrentCamera:WorldToViewportPoint(BodyParts.Root.Position)
+                ScreenPosition, OnScreen = CurrentCamera:WorldToViewportPoint(BodyParts.Root.Position)
 
                 local Orientation, BoxSize = BodyParts.Character:GetBoundingBox()
                 local Height = (CurrentCamera.CFrame - CurrentCamera.CFrame.Position) * Vector3.new(0, (math.clamp(BoxSize.Y, 1, 10) + 0.5) / 2, 0)  
@@ -231,7 +231,7 @@ RunService.RenderStepped:Connect(function()
                 Info.Extra.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), (Box.Main.Size.Y + Box.Main.Position.Y))
             end
             
-            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Info Font"]) or false
+            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Tracers"]) or false
             Tracer.Outline.Visible = Tracer.Main.Visible
 
             Box.Main.Visible = (OnScreen and Visuals.Flags["Boxes"]) or false
