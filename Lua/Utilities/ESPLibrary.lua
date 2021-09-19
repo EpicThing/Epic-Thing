@@ -11,7 +11,7 @@ local CurrentCamera = workspace.CurrentCamera
 local CIELUV = LoadFromRepo("Utilities", "CIELUV")
 local HealthbarLerp = CIELUV:Lerp(Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0))
 
-local Visuals = {Players = {}}
+local Visuals = {Players = {}, Flags = {}}
 
 local DrawingProperties = {
     Line = {
@@ -161,18 +161,18 @@ RunService.RenderStepped:Connect(function()
             local Health = PlayerUtilities:GetHealth(Player)
             local BodyParts = PlayerUtilities:GetBodyParts(Player)
             local IsOnClientTeam = LocalPlayer.Team == Player.Team
-            local PlayerColor = IsOnClientTeam and library.flags["Ally Color"] or library.flags["Enemy Color"]    
+            local PlayerColor = IsOnClientTeam and Visuals.Flags["Ally Color"] or Visuals.Flags["Enemy Color"]    
 
             local Tracer = Objects.Tracer 
             local Box = Objects.Box 
             local Healthbar = Objects.Healthbar
             local Info = Objects.Info
 
-            if library.flags["Use Team Color"] then
+            if Visuals.Flags["Use Team Color"] then
                 PlayerColor = Player.TeamColor.Color
             end
 
-            if library.flags["Team Check"] and IsOnClientTeam then
+            if Visuals.Flags["Team Check"] and IsOnClientTeam then
                 PassedTeamCheck = false
             end
 
@@ -211,26 +211,26 @@ RunService.RenderStepped:Connect(function()
                 Healthbar.Outline.Size = Vector2.new(4, (Box.Main.Size.Y + 2))
                 Healthbar.Outline.Position = Vector2.new((Box.Main.Position.X - (Box.Outline.Thickness + 2)), (Box.Main.Position.Y - 1))
                 
-                Info.Main.Font = Drawing.Fonts[library.flags["Info Font"]]
+                Info.Main.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
                 Info.Main.Text = NameString
                 Info.Main.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), ((ScreenPosition.Y - Box.Main.Size.Y / 2) - 18))
 
-                Info.Extra.Font = Drawing.Fonts[library.flags["Info Font"]]
+                Info.Extra.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
                 Info.Extra.Text = string.format("(%dft) (%d/%d)", Distance, Health.CurrentHealth, Health.MaxHealth)
                 Info.Extra.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), (Box.Main.Size.Y + Box.Main.Position.Y))
             end
             
-            Tracer.Main.Visible = (OnScreen and library.flags["Tracers"]) or false
+            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Tracers"]) or false
             Tracer.Outline.Visible = Tracer.Main.Visible
 
-            Box.Main.Visible = (OnScreen and library.flags["Boxes"]) or false
+            Box.Main.Visible = (OnScreen and Visuals.Flags["Boxes"]) or false
             Box.Outline.Visible = Box.Main.Visible
 
-            Healthbar.Main.Visible = (OnScreen and library.flags["Healthbar"]) or false
+            Healthbar.Main.Visible = (OnScreen and Visuals.Flags["Healthbar"]) or false
             Healthbar.Outline.Visible = Healthbar.Main.Visible
 
-            Info.Main.Visible = (OnScreen and library.flags["Info"]) or false
-            Info.Extra.Visible = (OnScreen and library.flags["Extra Info"]) or false
+            Info.Main.Visible = (OnScreen and Visuals.Flags["Info"]) or false
+            Info.Extra.Visible = (OnScreen and Visuals.Flags["Extra Info"]) or false
         end
     end
 end)
