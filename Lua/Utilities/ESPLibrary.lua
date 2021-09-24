@@ -100,9 +100,11 @@ end
 function Visuals.RemovePlayer(Player)
     if Visuals.Players[Player] then
         for Index, Table in next, Visuals.Players[Player] do
-            for Index2, Drawing in next, Table do
-                if Drawing.Remove then
-                    Drawing:Remove()
+            if type(Table) == "Table" then
+                for Index2, Drawing in next, Table do
+                    if Drawing.Remove then
+                        Drawing:Remove()
+                    end
                 end
             end
         end
@@ -180,69 +182,71 @@ RunService.RenderStepped:Connect(function()
             local Healthbar = Objects.Healthbar
             local Info = Objects.Info
 
-            if Visuals.Flags["Use Team Color"] then
-                PlayerColor = Player.TeamColor.Color
-            end
+            if Tracer and Box and Healthbar and Info then
+                if Visuals.Flags["Use Team Color"] then
+                    PlayerColor = Player.TeamColor.Color
+                end
 
-            if Visuals.Flags["Team Check"] and IsOnClientTeam then
-                PassedTeamCheck = false
-            end
+                if Visuals.Flags["Team Check"] and IsOnClientTeam then
+                    PassedTeamCheck = false
+                end
 
-            if PlayerUtilities:IsPlayerAlive(Player) and Health and BodyParts and PlayerColor and PassedTeamCheck then
-                local HealthPercent = (Health.CurrentHealth / Health.MaxHealth)
-                local Distance = LocalPlayer:DistanceFromCharacter(BodyParts.Root.Position)
-                ScreenPosition, OnScreen = CurrentCamera:WorldToViewportPoint(BodyParts.Root.Position)
+                if PlayerUtilities:IsPlayerAlive(Player) and Health and BodyParts and PlayerColor and PassedTeamCheck then
+                    local HealthPercent = (Health.CurrentHealth / Health.MaxHealth)
+                    local Distance = LocalPlayer:DistanceFromCharacter(BodyParts.Root.Position)
+                    ScreenPosition, OnScreen = CurrentCamera:WorldToViewportPoint(BodyParts.Root.Position)
 
-                local Orientation, BoxSize = BodyParts.Character:GetBoundingBox()
-                local Height = (CurrentCamera.CFrame - CurrentCamera.CFrame.Position) * Vector3.new(0, (math.clamp(BoxSize.Y, 1, 10) + 0.5) / 2, 0)  
-                local ScreenHeight = math.abs(CurrentCamera:WorldToScreenPoint(Orientation.Position + Height).Y - CurrentCamera:WorldToScreenPoint(Orientation.Position - Height).Y)
-                local Size = Visuals:Round(Vector2.new((ScreenHeight / 2), ScreenHeight))
+                    local Orientation, BoxSize = BodyParts.Character:GetBoundingBox()
+                    local Height = (CurrentCamera.CFrame - CurrentCamera.CFrame.Position) * Vector3.new(0, (math.clamp(BoxSize.Y, 1, 10) + 0.5) / 2, 0)  
+                    local ScreenHeight = math.abs(CurrentCamera:WorldToScreenPoint(Orientation.Position + Height).Y - CurrentCamera:WorldToScreenPoint(Orientation.Position - Height).Y)
+                    local Size = Visuals:Round(Vector2.new((ScreenHeight / 2), ScreenHeight))
 
-                local NameString = Player.DisplayName ~= Player.Name and string.format("%s | %s", Player.Name, Player.DisplayName) or Player.Name
+                    local NameString = Player.DisplayName ~= Player.Name and string.format("%s | %s", Player.Name, Player.DisplayName) or Player.Name
+                    
+                    Tracer.Main.Color = PlayerColor
+                    Tracer.Main.From = Vector2.new(CurrentCamera.ViewportSize.X / 2,  CurrentCamera.ViewportSize.Y)
+                    Tracer.Main.To = Vector2.new(ScreenPosition.X, ScreenPosition.Y)
+                    
+                    Tracer.Outline.Thickness = (Tracer.Main.Thickness * 2)
+                    Tracer.Outline.From = Tracer.Main.From
+                    Tracer.Outline.To = Tracer.Main.To
+
+                    Box.Main.Color = PlayerColor
+                    Box.Main.Size = Size
+                    Box.Main.Position = Visuals:Round(Vector2.new(ScreenPosition.X, ScreenPosition.Y) - (Size / 2))
+
+                    Box.Outline.Thickness = Box.Main.Thickness * 2
+                    Box.Outline.Size = Box.Main.Size
+                    Box.Outline.Position = Box.Main.Position
+
+                    Healthbar.Main.Color = HealthbarLerp(HealthPercent)
+                    Healthbar.Main.Size = Vector2.new(2, (-Box.Main.Size.Y * HealthPercent))
+                    Healthbar.Main.Position = Vector2.new((Box.Main.Position.X - (Box.Outline.Thickness + 1)), (Box.Main.Position.Y + Box.Main.Size.Y))
+
+                    Healthbar.Outline.Size = Vector2.new(4, (Box.Main.Size.Y + 2))
+                    Healthbar.Outline.Position = Vector2.new((Box.Main.Position.X - (Box.Outline.Thickness + 2)), (Box.Main.Position.Y - 1))
+                    
+                    Info.Main.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
+                    Info.Main.Text = NameString
+                    Info.Main.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), ((ScreenPosition.Y - Box.Main.Size.Y / 2) - 18))
+
+                    Info.Extra.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
+                    Info.Extra.Text = string.format("(%dft) (%d/%d)", Distance, Health.CurrentHealth, Health.MaxHealth)
+                    Info.Extra.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), (Box.Main.Size.Y + Box.Main.Position.Y))
+                end
                 
-                Tracer.Main.Color = PlayerColor
-                Tracer.Main.From = Vector2.new(CurrentCamera.ViewportSize.X / 2,  CurrentCamera.ViewportSize.Y)
-                Tracer.Main.To = Vector2.new(ScreenPosition.X, ScreenPosition.Y)
-                
-                Tracer.Outline.Thickness = (Tracer.Main.Thickness * 2)
-                Tracer.Outline.From = Tracer.Main.From
-                Tracer.Outline.To = Tracer.Main.To
+                Tracer.Main.Visible = (OnScreen and Visuals.Flags["Tracers"]) or false
+                Tracer.Outline.Visible = Tracer.Main.Visible
 
-                Box.Main.Color = PlayerColor
-                Box.Main.Size = Size
-                Box.Main.Position = Visuals:Round(Vector2.new(ScreenPosition.X, ScreenPosition.Y) - (Size / 2))
+                Box.Main.Visible = (OnScreen and Visuals.Flags["Boxes"]) or false
+                Box.Outline.Visible = Box.Main.Visible
 
-                Box.Outline.Thickness = Box.Main.Thickness * 2
-                Box.Outline.Size = Box.Main.Size
-                Box.Outline.Position = Box.Main.Position
+                Healthbar.Main.Visible = (OnScreen and Visuals.Flags["Healthbar"]) or false
+                Healthbar.Outline.Visible = Healthbar.Main.Visible
 
-                Healthbar.Main.Color = HealthbarLerp(HealthPercent)
-                Healthbar.Main.Size = Vector2.new(2, (-Box.Main.Size.Y * HealthPercent))
-                Healthbar.Main.Position = Vector2.new((Box.Main.Position.X - (Box.Outline.Thickness + 1)), (Box.Main.Position.Y + Box.Main.Size.Y))
-
-                Healthbar.Outline.Size = Vector2.new(4, (Box.Main.Size.Y + 2))
-                Healthbar.Outline.Position = Vector2.new((Box.Main.Position.X - (Box.Outline.Thickness + 2)), (Box.Main.Position.Y - 1))
-                
-                Info.Main.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
-                Info.Main.Text = NameString
-                Info.Main.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), ((ScreenPosition.Y - Box.Main.Size.Y / 2) - 18))
-
-                Info.Extra.Font = Drawing.Fonts[Visuals.Flags["Info Font"]]
-                Info.Extra.Text = string.format("(%dft) (%d/%d)", Distance, Health.CurrentHealth, Health.MaxHealth)
-                Info.Extra.Position = Vector2.new(((Box.Main.Size.X / 2) + Box.Main.Position.X), (Box.Main.Size.Y + Box.Main.Position.Y))
+                Info.Main.Visible = (OnScreen and Visuals.Flags["Info"]) or false
+                Info.Extra.Visible = (OnScreen and Visuals.Flags["Extra Info"]) or false
             end
-            
-            Tracer.Main.Visible = (OnScreen and Visuals.Flags["Tracers"]) or false
-            Tracer.Outline.Visible = Tracer.Main.Visible
-
-            Box.Main.Visible = (OnScreen and Visuals.Flags["Boxes"]) or false
-            Box.Outline.Visible = Box.Main.Visible
-
-            Healthbar.Main.Visible = (OnScreen and Visuals.Flags["Healthbar"]) or false
-            Healthbar.Outline.Visible = Healthbar.Main.Visible
-
-            Info.Main.Visible = (OnScreen and Visuals.Flags["Info"]) or false
-            Info.Extra.Visible = (OnScreen and Visuals.Flags["Extra Info"]) or false
         end
     end
 end)
