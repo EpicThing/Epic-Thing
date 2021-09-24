@@ -86,7 +86,7 @@ function Visuals.AddPlayer(Player)
                 Main = Visuals:CreateDrawing("Line")
             },
             Healthbar = {
-                Outline = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 255, 0)}),
+                Outline = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 0, 0)}),
                 Main = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 255, 0)})
             },
             Info = {
