@@ -76,7 +76,7 @@ end
 function Visuals.AddPlayer(Player)
     if not Visuals.Players[Player] then
         Visuals.Players[Player] = {
-            Color = Color3.fromRGB(255, 255, 255),
+            Color = Color3.fromRGB(0, 255, 0),
             Box = {
                 Outline = Visuals:CreateDrawing("Square", {Color = Color3.fromRGB(0, 0, 0)}),
                 Main = Visuals:CreateDrawing("Square")
