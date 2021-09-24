@@ -76,6 +76,7 @@ end
 function Visuals.AddPlayer(Player)
     if not Visuals.Players[Player] then
         Visuals.Players[Player] = {
+            Color = Color3.fromRGB(255, 255, 255)
             Box = {
                 Outline = Visuals:CreateDrawing("Square", {Color = Color3.fromRGB(0, 0, 0)}),
                 Main = Visuals:CreateDrawing("Square")
@@ -172,7 +173,7 @@ RunService.RenderStepped:Connect(function()
             local Health = PlayerUtilities:GetHealth(Player)
             local BodyParts = PlayerUtilities:GetBodyParts(Player)
             local IsOnClientTeam = LocalPlayer.Team == Player.Team
-            local PlayerColor = IsOnClientTeam and Visuals.Flags["Ally Color"] or Visuals.Flags["Enemy Color"]    
+            local PlayerColor = Objects.Color--IsOnClientTeam and Visuals.Flags["Ally Color"] or Visuals.Flags["Enemy Color"]    
 
             local Tracer = Objects.Tracer 
             local Box = Objects.Box 
