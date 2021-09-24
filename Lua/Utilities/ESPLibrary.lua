@@ -78,15 +78,15 @@ function Visuals.AddPlayer(Player)
         Visuals.Players[Player] = {
             Color = Color3.fromRGB(0, 255, 0),
             Box = {
-                Outline = Visuals:CreateDrawing("Square", {Color = Color3.fromRGB(0, 0, 0)}),
+                Outline = Visuals:CreateDrawing("Square", {Color = Color3.fromRGB(0, 255, 0)}),
                 Main = Visuals:CreateDrawing("Square")
             },
             Tracer = {
-                Outline = Visuals:CreateDrawing("Line", {Color = Color3.fromRGB(0, 0, 0)}),
+                Outline = Visuals:CreateDrawing("Line", {Color = Color3.fromRGB(0, 255, 0)}),
                 Main = Visuals:CreateDrawing("Line")
             },
             Healthbar = {
-                Outline = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 0, 0)}),
+                Outline = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 255, 0)}),
                 Main = Visuals:CreateDrawing("Square", {Filled = true, Color = Color3.fromRGB(0, 255, 0)})
             },
             Info = {
