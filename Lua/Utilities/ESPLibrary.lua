@@ -210,12 +210,14 @@ RunService.RenderStepped:Connect(function()
                     Tracer.Outline.Thickness = (Tracer.Main.Thickness * 2)
                     Tracer.Outline.From = Tracer.Main.From
                     Tracer.Outline.To = Tracer.Main.To
+                    Tracer.Outline.Color = Tracer.Main.Color
 
                     Box.Main.Color = PlayerColor
                     Box.Main.Size = Size
                     Box.Main.Position = Visuals:Round(Vector2.new(ScreenPosition.X, ScreenPosition.Y) - (Size / 2))
 
                     Box.Outline.Thickness = Box.Main.Thickness * 2
+                    Box.Main.Color = Box.Main.Color
                     Box.Outline.Size = Box.Main.Size
                     Box.Outline.Position = Box.Main.Position
 
